@@ -13,4 +13,4 @@ setuptools==80.9.0
 sqlparse==0.5.3
 tzdata==2025.2
 virtualenv==20.34.0
-gunicorn==25.0.0
+
