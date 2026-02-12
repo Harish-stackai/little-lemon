@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Little Lemon - Book a Table{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #495E57;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    .btn {
+        background-color: #495E57;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .btn:hover {
+        background-color: #3a4c49;
+    }
+    .reservations-container {
+        margin-top: 30px;
+    }
+    .reservation-item {
+        background-color: #f9f9f9;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #495E57;
+    }
+    .available-slots {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f0f8f0;
+        border-radius: 5px;
+    }
+    .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .slot-item {
+        padding: 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    .slot-available {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .slot-booked {
+        background-color: #cccccc;
+        color: #666666;
+    }
+    .loading {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>🍋 Little Lemon</h1>
+        <h2>Reserve Your Table</h2>
+    </div>
+
+    <form method="post" id="bookingForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.reservation_date.id_for_label }}">{{ form.reservation_date.label }}</label>
+            {{ form.reservation_date }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.reservation_slot.id_for_label }}">{{ form.reservation_slot.label }}</label>
+            {{ form.reservation_slot }}
+        </div>
+
+        <button type="submit" class="btn">Make Reservation</button>
+    </form>
+</div>
+
+<script>
+    // Set current date as default when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const dateField = document.getElementById('reservation_date');
+        if (dateField && !dateField.value) {
+            dateField.value = today;
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        const firstName = document.querySelector('input[name="first_name"]').value;
+        const reservationDate = document.getElementById('reservation_date').value;
+        const reservationSlot = document.getElementById('reservation_slot').value;
+        
+        if (!firstName || !reservationDate || !reservationSlot) {
+            e.preventDefault();
+            alert('Please fill in all fields');
+            return;
+        }
+        
+        // The form will submit normally, Django will handle duplicate checking
+    });
+</script>
+{% endblock %}

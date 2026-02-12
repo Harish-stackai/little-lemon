@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Little Lemon Restaurant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Karla', sans-serif;
+            background: linear-gradient(135deg, #495E57 0%, #F4CE14 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-header h1 {
+            font-family: 'Markazi Text', serif;
+            font-size: 3rem;
+            color: #495E57;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .brand-header .tagline {
+            font-size: 1.1rem;
+            color: #EE9972;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .brand-header .login-title {
+            font-size: 1.5rem;
+            color: #495E57;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: #495E57;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Karla', sans-serif;
+            transition: all 0.3s ease;
+            background: #FAFAFA;
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #F4CE14;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(244, 206, 20, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(135deg, #F4CE14 0%, #F4CE14 100%);
+            color: #495E57;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Karla', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #E6B800 0%, #E6B800 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 206, 20, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .error-messages {
+            background: #FFE6E6;
+            border: 1px solid #FF9999;
+            color: #CC0000;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .links-section {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .links-section a {
+            color: #495E57;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .links-section a:hover {
+            color: #F4CE14;
+            text-decoration: underline;
+        }
+
+        .signup-prompt {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .forgot-password {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .welcome-message {
+            background: rgba(244, 206, 20, 0.1);
+            border: 1px solid #F4CE14;
+            color: #495E57;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem 1.5rem;
+                margin: 10px;
+            }
+
+            .brand-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .brand-header .login-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Loading animation for form submission */
+        .btn-login.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-login.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #495E57;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand-header">
+            <h1>🍋 Little Lemon</h1>
+            <div class="tagline">Mediterranean Restaurant</div>
+            <div class="login-title">Welcome Back</div>
+        </div>
+
+        <div class="welcome-message">
+            Please sign in to make reservations and access your booking history.
+        </div>
+        
+        <form method="post" id="loginForm">
+            {% csrf_token %}
+            
+            {% if form.errors or form.non_field_errors %}
+                <div class="error-messages">
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if form.username.errors %}
+                        <div>Username: {{ form.username.errors|join:", " }}</div>
+                    {% endif %}
+                    {% if form.password.errors %}
+                        <div>Password: {{ form.password.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </div>
+            
+            <button type="submit" class="btn-login" id="loginBtn">
+                Sign In
+            </button>
+        </form>
+        
+        <div class="links-section">
+            <div class="signup-prompt">
+                Don't have an account? <a href="{% url 'signup' %}">Create Account</a>
+            </div>
+            <!-- Removed password reset link as it's not configured -->
+        </div>
+    </div>
+
+    <script>
+        // Add loading state to button on form submission
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+        });
+
+        // Auto-focus on first input field
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('input[type="text"]');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+
+        // Handle Enter key in password field
+        document.querySelector('input[type="password"]').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').submit();
+            }
+        });
+    </script>
+</body>
+</html>

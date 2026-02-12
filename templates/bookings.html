@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Little Lemon - All Reservations{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #495E57;
+    }
+    .json-data {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
+    .reservations-list {
+        margin-top: 20px;
+    }
+    .reservation-item {
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #495E57;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .reservation-details {
+        flex-grow: 1;
+    }
+    .reservation-name {
+        font-weight: bold;
+        color: #495E57;
+        font-size: 18px;
+    }
+    .reservation-info {
+        color: #666;
+        margin-top: 5px;
+    }
+    .no-bookings {
+        text-align: center;
+        color: #666;
+        padding: 40px;
+        font-style: italic;
+    }
+    .refresh-btn {
+        background-color: #495E57;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+    .refresh-btn:hover {
+        background-color: #3a4c49;
+    }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>🍋 Little Lemon</h1>
+        <h2>All Reservations</h2>
+    </div>
+
+    <button class="refresh-btn" onclick="loadBookingsJSON()">Refresh Data</button>
+
+    <h3>JSON Data from API</h3>
+    <div class="json-data" id="jsonData">
+        Loading booking data...
+    </div>
+
+    <h3>Formatted Reservations</h3>
+    <div class="reservations-list" id="reservationsList">
+        {% if bookings %}
+            {% for booking in bookings %}
+            <div class="reservation-item">
+                <div class="reservation-details">
+                    <div class="reservation-name">{{ booking.first_name }}</div>
+                    <div class="reservation-info">
+                        Date: {{ booking.reservation_date }} | Time: {{ booking.reservation_slot }}:00
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-bookings">No Booking</div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Load JSON data when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadBookingsJSON();
+    });
+
+    function loadBookingsJSON() {
+        // Fetch all bookings using the API
+        fetch('/bookings/?format=json', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                displayJSONData(data);
+            })
+            .catch(error => {
+                console.error('Error fetching bookings:', error);
+                document.getElementById('jsonData').textContent = 'Error loading data';
+            });
+    }
+
+    function displayJSONData(data) {
+        const jsonContainer = document.getElementById('jsonData');
+        
+        if (Array.isArray(data) && data.length === 0) {
+            jsonContainer.textContent = '[]';
+            return;
+        }
+        
+        // Format JSON for display
+        const formattedJSON = JSON.stringify(data, null, 2);
+        jsonContainer.textContent = formattedJSON;
+    }
+</script>
+{% endblock %}
